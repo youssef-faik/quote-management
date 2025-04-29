@@ -1,48 +1,53 @@
 <ion-header [translucent]="true">
-  <ion-toolbar color="primary">
-    <ion-title>
-      Quote Management
+  <ion-toolbar color="primary" class="modern-toolbar">
+    <ion-title class="ion-text-center">
+      <span class="app-title">Inspirational Quotes</span>
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" class="ion-padding">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Quote Management</ion-title>
+      <ion-title size="large" class="ion-text-center">Inspirational Quotes</ion-title>
     </ion-toolbar>
   </ion-header>
 
-  <!-- Quote Form -->
-  <ion-card *ngIf="showForm">
-    <ion-card-header>
-      <ion-card-title>{{ isEditing ? 'Edit Quote' : 'Add New Quote' }}</ion-card-title>
+  <!-- Quote Form with enhanced styling -->
+  <ion-card *ngIf="showForm" class="form-card">
+    <ion-card-header class="form-header">
+      <ion-card-title class="ion-text-center">{{ isEditing ? 'Edit Quote' : 'Add New Quote' }}</ion-card-title>
     </ion-card-header>
     <ion-card-content>
       <form [formGroup]="quoteForm" (ngSubmit)="saveQuote()">
-        <ion-item>
-          <ion-label position="stacked">Quote Content</ion-label>
-          <ion-input
+        <ion-item lines="full" class="input-item">
+          <ion-label position="floating">Quote Content</ion-label>
+          <ion-textarea 
             formControlName="content"
-            placeholder="Enter quote text"
+            [counter]="true"
+            [maxlength]="200"
+            [autoGrow]="true"
+            class="quote-input"
             [errorText]="quoteForm.get('content')?.touched && quoteForm.get('content')?.invalid ? 'Content is required (min 3 characters)' : ''"
-          ></ion-input>
+          ></ion-textarea>
         </ion-item>
 
-        <ion-item>
-          <ion-label position="stacked">Author</ion-label>
+        <ion-item lines="full" class="input-item">
+          <ion-label position="floating">Author</ion-label>
           <ion-input
             formControlName="author"
-            placeholder="Enter author name"
+            class="author-input"
             [errorText]="quoteForm.get('author')?.touched && quoteForm.get('author')?.invalid ? 'Author is required' : ''"
           ></ion-input>
         </ion-item>
 
-        <div class="ion-padding">
-          <ion-button expand="block" type="submit" [disabled]="!quoteForm.valid">
+        <div class="ion-padding form-buttons">
+          <ion-button expand="block" type="submit" [disabled]="!quoteForm.valid" shape="round" class="save-btn">
+            <ion-icon name="{{ isEditing ? 'checkmark-circle' : 'add-circle' }}-outline" slot="start"></ion-icon>
             {{ isEditing ? 'Update' : 'Save' }} Quote
           </ion-button>
-          <ion-button expand="block" color="medium" type="button" (click)="toggleForm()">
+          <ion-button expand="block" fill="outline" color="medium" type="button" (click)="toggleForm()" shape="round" class="cancel-btn">
+            <ion-icon name="close-circle-outline" slot="start"></ion-icon>
             Cancel
           </ion-button>
         </div>
@@ -50,34 +55,45 @@
     </ion-card-content>
   </ion-card>
 
-  <!-- Quote List -->
-  <div class="ion-padding" *ngIf="(quotes$ | async)?.length === 0">
-    <p class="ion-text-center">No quotes yet. Add your first quote!</p>
+  <!-- Empty state with illustration -->
+  <div class="empty-state" *ngIf="(quotes$ | async)?.length === 0 && !showForm">
+    <ion-icon name="book-outline" class="empty-icon"></ion-icon>
+    <h2>No quotes yet</h2>
+    <p>Start adding your favorite inspirational quotes!</p>
+    <ion-button (click)="toggleForm()" shape="round" class="start-btn">
+      <ion-icon name="add-outline" slot="start"></ion-icon>
+      Add Your First Quote
+    </ion-button>
   </div>
 
-  <ion-list *ngIf="(quotes$ | async)?.length">
-    <ion-card *ngFor="let quote of quotes$ | async">
-      <ion-card-header>
-        <ion-card-subtitle>{{ quote.createdAt | date }}</ion-card-subtitle>
-        <ion-card-title>{{ quote.author }}</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <p>{{ quote.content }}</p>
-        <div class="ion-text-right ion-padding-top">
-          <ion-button fill="clear" (click)="editQuote(quote)">
-            <ion-icon name="create-outline" slot="icon-only"></ion-icon>
-          </ion-button>
-          <ion-button fill="clear" color="danger" (click)="deleteQuote(quote)">
-            <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
-          </ion-button>
+  <!-- Quote List with improved cards -->
+  <div class="quote-container">
+    <ion-card *ngFor="let quote of quotes$ | async; let i = index" 
+      class="quote-card">
+      <div class="quote-content">
+        <div class="quote-icon">
+          <ion-icon name="chatbubble-outline"></ion-icon>
         </div>
-      </ion-card-content>
+        <div class="quote-text">{{ quote.content }}</div>
+      </div>
+      <div class="quote-author">
+        <div class="author-name">— {{ quote.author }}</div>
+        <div class="quote-date">{{ quote.createdAt | date:'medium' }}</div>
+      </div>
+      <div class="quote-actions ion-text-right">
+        <ion-button fill="clear" (click)="editQuote(quote)" class="action-btn">
+          <ion-icon name="create-outline"></ion-icon>
+        </ion-button>
+        <ion-button fill="clear" color="danger" (click)="deleteQuote(quote)" class="action-btn">
+          <ion-icon name="trash-outline"></ion-icon>
+        </ion-button>
+      </div>
     </ion-card>
-  </ion-list>
+  </div>
 
-  <!-- FAB Button to Add Quote -->
+  <!-- Modern FAB Button to Add Quote -->
   <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="!showForm">
-    <ion-fab-button (click)="toggleForm()">
+    <ion-fab-button color="primary" class="fab-btn" (click)="toggleForm()">
       <ion-icon name="add-outline"></ion-icon>
     </ion-fab-button>
   </ion-fab>

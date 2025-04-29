@@ -2,12 +2,23 @@ import { AsyncPipe, CommonModule, DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
-  AlertController, IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonFab,
+  AlertController, IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonFab,
   IonFabButton, IonHeader, IonIcon, IonInput, IonItem,
-  IonLabel, IonList, IonTitle, IonToolbar
+  IonLabel,
+  IonTextarea,
+  IonTitle, IonToolbar
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { addOutline, createOutline, trashOutline } from 'ionicons/icons';
+import {
+  addCircleOutline,
+  addOutline,
+  bookOutline,
+  chatbubbleOutline,
+  checkmarkCircleOutline,
+  closeCircleOutline,
+  createOutline,
+  trashOutline
+} from 'ionicons/icons';
 import { Observable } from 'rxjs';
 import { Quote } from '../models/quote.model';
 import { QuotesService } from '../services/quotes.service';
@@ -26,7 +37,6 @@ import { QuotesService } from '../services/quotes.service';
     IonToolbar, 
     IonTitle, 
     IonContent,
-    IonList,
     IonItem,
     IonLabel,
     IonButton,
@@ -34,11 +44,11 @@ import { QuotesService } from '../services/quotes.service';
     IonCard,
     IonCardHeader,
     IonCardTitle,
-    IonCardSubtitle,
     IonCardContent,
     IonFab,
     IonFabButton,
-    IonInput
+    IonInput,
+    IonTextarea
   ],
 })
 export class HomePage implements OnInit {
@@ -62,7 +72,12 @@ export class HomePage implements OnInit {
     addIcons({ 
       'add-outline': addOutline,
       'create-outline': createOutline,
-      'trash-outline': trashOutline
+      'trash-outline': trashOutline,
+      'close-circle-outline': closeCircleOutline,
+      'add-circle-outline': addCircleOutline,
+      'checkmark-circle-outline': checkmarkCircleOutline,
+      'book-outline': bookOutline,
+      'chatbubble-outline': chatbubbleOutline
     });
   }
 
