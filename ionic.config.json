@@ -1,0 +1,7 @@
+{
+  "name": "quote-management",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
