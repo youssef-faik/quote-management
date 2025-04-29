@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
+  <ion-toolbar color="primary">
     <ion-title>
-      Blank
+      Quote Management
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -9,12 +9,76 @@
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
+      <ion-title size="large">Quote Management</ion-title>
     </ion-toolbar>
   </ion-header>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+  <!-- Quote Form -->
+  <ion-card *ngIf="showForm">
+    <ion-card-header>
+      <ion-card-title>{{ isEditing ? 'Edit Quote' : 'Add New Quote' }}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <form [formGroup]="quoteForm" (ngSubmit)="saveQuote()">
+        <ion-item>
+          <ion-label position="stacked">Quote Content</ion-label>
+          <ion-input
+            formControlName="content"
+            placeholder="Enter quote text"
+            [errorText]="quoteForm.get('content')?.touched && quoteForm.get('content')?.invalid ? 'Content is required (min 3 characters)' : ''"
+          ></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Author</ion-label>
+          <ion-input
+            formControlName="author"
+            placeholder="Enter author name"
+            [errorText]="quoteForm.get('author')?.touched && quoteForm.get('author')?.invalid ? 'Author is required' : ''"
+          ></ion-input>
+        </ion-item>
+
+        <div class="ion-padding">
+          <ion-button expand="block" type="submit" [disabled]="!quoteForm.valid">
+            {{ isEditing ? 'Update' : 'Save' }} Quote
+          </ion-button>
+          <ion-button expand="block" color="medium" type="button" (click)="toggleForm()">
+            Cancel
+          </ion-button>
+        </div>
+      </form>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Quote List -->
+  <div class="ion-padding" *ngIf="(quotes$ | async)?.length === 0">
+    <p class="ion-text-center">No quotes yet. Add your first quote!</p>
   </div>
+
+  <ion-list *ngIf="(quotes$ | async)?.length">
+    <ion-card *ngFor="let quote of quotes$ | async">
+      <ion-card-header>
+        <ion-card-subtitle>{{ quote.createdAt | date }}</ion-card-subtitle>
+        <ion-card-title>{{ quote.author }}</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <p>{{ quote.content }}</p>
+        <div class="ion-text-right ion-padding-top">
+          <ion-button fill="clear" (click)="editQuote(quote)">
+            <ion-icon name="create-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+          <ion-button fill="clear" color="danger" (click)="deleteQuote(quote)">
+            <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </ion-list>
+
+  <!-- FAB Button to Add Quote -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="!showForm">
+    <ion-fab-button (click)="toggleForm()">
+      <ion-icon name="add-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>
